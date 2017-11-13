@@ -15,6 +15,8 @@ namespace BitToGithub
             const string bbUsername = "";
             const string bbPassword = "";
             const string bbRepoName = "";
+            const string bbRepoOwnerName = "";
+
             const string githubUsername = "";
             const string githubPassword = "";
             const string githubRepoName = "";
@@ -23,7 +25,9 @@ namespace BitToGithub
             var isAllDefined = new[] { bbUsername, bbPassword, bbRepoName, githubUsername, githubPassword, githubRepoName, githubRepoOwnerName }.All(param => string.IsNullOrEmpty(param) == false);
             if (isAllDefined)
             {
-                string bbRepoIssuesUrl = "https://api.bitbucket.org/1.0/repositories/\{bbUsername}/\{bbRepoName}/issues";
+                //string bbRepoIssuesUrl = "https://api.bitbucket.org/1.0/repositories/\{bbUsername}/\{bbRepoName}/issues";
+                string bbRepoIssuesUrl = string.Format("https://api.bitbucket.org/1.0/repositories/{0}/{1}/issues", bbRepoOwnerName, bbRepoName);
+
 
                 var github = new GitHubClient(new Octokit.ProductHeaderValue("MyAmazingApp"));
                 github.Credentials = new Credentials(githubUsername, githubPassword);
@@ -50,7 +54,9 @@ namespace BitToGithub
                     int startIndex = 1;
                     while (true)
                     {
-                        var response = client.GetAsync(bbRepoIssuesUrl + "?start=\{startIndex}").Result;
+                        System.Threading.Thread.Sleep(3000);
+                        //var response = client.GetAsync(bbRepoIssuesUrl + "?start=\{startIndex}").Result;
+                        var response = client.GetAsync(bbRepoIssuesUrl + "?start=" + startIndex.ToString()).Result;
                         response.EnsureSuccessStatusCode();
                         var result = response.Content.ReadAsAsync<BitBuckect.Rootobject>().Result;
                         startIndex += result.issues.Length;
@@ -61,7 +67,12 @@ namespace BitToGithub
                                 Console.WriteLine("found issue {0}", issue.local_id);
                                 var newIssue = new NewIssue(issue.title);
                                 newIssue.Labels.Add(migratedLabel);
-                                newIssue.Body = issue.content + "\{Environment.NewLine}\{Environment.NewLine}> Originally created at \{issue.utc_created_on} (UTC) by \{issue.reported_by.username} as a(n) \{issue.priority} issue.";
+                                //newIssue.Body = issue.content +  "\{Environment.NewLine}\{Environment.NewLine}> Originally created at \{issue.utc_created_on} (UTC) by \{issue.reported_by.username} as a(n) \{issue.priority} issue.";
+                                newIssue.Body =
+                                    issue.content +
+                                    Environment.NewLine +
+                                    Environment.NewLine +
+                                    String.Format("> Originally created at {0} (UTC) by {1} as a(n) {2} issue.", issue.utc_created_on, issue.reported_by.username, issue.priority);
 
                                 if (string.IsNullOrWhiteSpace(issue.metadata.component) == false)
                                 {
@@ -96,7 +107,8 @@ namespace BitToGithub
 
                                 if (issue.comment_count > 0)
                                 {
-                                    var commentsResponse = client.GetAsync(bbRepoIssuesUrl + "/\{issue.local_id}/comments").Result;
+                                    var commentsResponse = client.GetAsync(bbRepoIssuesUrl + "/" + issue.local_id + "/comments").Result;
+
                                     if (commentsResponse.IsSuccessStatusCode)
                                     {
                                         var comments = commentsResponse.Content.ReadAsAsync<IEnumerable<BitBucketComment.Class1>>().Result;
@@ -108,13 +120,15 @@ namespace BitToGithub
                                     }
                                     else
                                     {
-                                        Console.WriteLine("Failed to fetch comments for issye {0}", issue.local_id);
+                                        Console.WriteLine("Failed to fetch comments for issue {0}", issue.local_id);
                                     }
                                 }
+                                System.Threading.Thread.Sleep(3000);
                             }
                         }
                         else
                         {
+                            Console.ReadLine();
                             break;
                         }
                     }
