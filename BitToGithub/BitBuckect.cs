@@ -1,103 +1,135 @@
-﻿using System;
+﻿// This file is part of the BitToGithub project
+//
+// Copyright © 2016-2019 Tigra Astronomy, all rights reserved.
+//
+// File: BitBuckect.cs  Last modified: 2019-09-06@06:47 by Tim Long
+
+using System;
 
 namespace BitToGithub
 {
-    public class BitBuckect
+    public class BitBucket
     {
-        public class Rootobject
+        public class Comment
         {
-            public int count { get; set; }
-            public Filter filter { get; set; }
-            public object search { get; set; }
-            public Issue[] issues { get; set; }
+            public Content content { get; set; }
+
+            public DateTime created_on { get; set; }
+
+            public int id { get; set; }
+
+            public Issue issue { get; set; }
+
+            public Links links { get; set; }
+
+            public string type { get; set; }
+
+            public DateTime? updated_on { get; set; }
+
+            public Person user { get; set; }
         }
 
-        public class Filter
+        public class CommentRoot
         {
+            public int page { get; set; }
+
+            public int pagelen { get; set; }
+
+            public int size { get; set; }
+
+            public Comment[] values { get; set; }
+            public string next { get; set; }
+            public string previous { get; set; }
+
+            }
+
+        public class Content
+        {
+            public string html { get; set; }
+
+            public string markup { get; set; }
+
+            public string raw { get; set; }
+
+            public string type { get; set; }
         }
 
         public class Issue
         {
-            public string status { get; set; }
-            public string priority { get; set; }
-            public string title { get; set; }
-            public Reported_By reported_by { get; set; }
-            public string utc_last_updated { get; set; }
-            public Responsible responsible { get; set; }
-            public DateTime created_on { get; set; }
-            public Metadata metadata { get; set; }
-            public string content { get; set; }
-            public int comment_count { get; set; }
-            public int local_id { get; set; }
-            public int follower_count { get; set; }
-            public string utc_created_on { get; set; }
-            public string resource_uri { get; set; }
-            public bool is_spam { get; set; }
-        }
+            public Person assignee { get; set; }
 
-        public class Reported_By
-        {
-            public string username { get; set; }
-            public string first_name { get; set; }
-            public string last_name { get; set; }
-            public string display_name { get; set; }
-            public bool is_staff { get; set; }
-            public string avatar { get; set; }
-            public string resource_uri { get; set; }
-            public bool is_team { get; set; }
-        }
-
-        public class Responsible
-        {
-            public string username { get; set; }
-            public string first_name { get; set; }
-            public string last_name { get; set; }
-            public string display_name { get; set; }
-            public bool is_staff { get; set; }
-            public string avatar { get; set; }
-            public string resource_uri { get; set; }
-            public bool is_team { get; set; }
-        }
-
-        public class Metadata
-        {
-            public string kind { get; set; }
-            public string version { get; set; }
             public string component { get; set; }
+
+            public Content content { get; set; }
+
+            public DateTime? created_on { get; set; }
+
+            public DateTime? edited_on { get; set; }
+
+            public int id { get; set; }
+
+            public string kind { get; set; }
+
+            public Links links { get; set; }
+
             public string milestone { get; set; }
+
+            public string priority { get; set; }
+
+            public Person reporter { get; set; }
+
+            public Repository repository { get; set; }
+
+            public string state { get; set; }
+
+            public string title { get; set; }
+
+            public string type { get; set; }
+
+            public DateTime? updated_on { get; set; }
+
+            public string version { get; set; }
+
+            public int votes { get; set; }
+
+            public int watches { get; set; }
         }
 
-    }
-
-    public class BitBucketComment
-    {
-        public class Rootobject
+        public class IssueRoot
         {
-            public Class1[] Property1 { get; set; }
+            public int page { get; set; }
+
+            public int pagelen { get; set; }
+
+            public int size { get; set; }
+
+            public Issue[] values { get; set; }
+
+            public string next { get; set; }
+            public string previous { get; set; }
         }
 
-        public class Class1
+        public class Links
         {
-            public string content { get; set; }
-            public Author_Info author_info { get; set; }
-            public int comment_id { get; set; }
-            public string utc_updated_on { get; set; }
-            public bool convert_markup { get; set; }
-            public string utc_created_on { get; set; }
-            public bool is_spam { get; set; }
         }
 
-        public class Author_Info
+        public class Person
         {
-            public string username { get; set; }
-            public string first_name { get; set; }
-            public string last_name { get; set; }
+            public string account_id { get; set; }
+
             public string display_name { get; set; }
-            public bool is_staff { get; set; }
-            public string avatar { get; set; }
-            public string resource_uri { get; set; }
-            public bool is_team { get; set; }
+
+            public Links links { get; set; }
+
+            public string nickname { get; set; }
+
+            public string type { get; set; }
+
+            public string uuid { get; set; }
         }
 
+        public class Repository
+        {
+        }
     }
 }
